@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "identityapp1": {
+      "type": "identityapp"
+    },
+    "appInsights1": {
+      "type": "appInsights"
+    },
+    "postgresql1": {
+      "type": "postgresql",
+      "connectionId": "db-connection"
+    }
+  }
+}
