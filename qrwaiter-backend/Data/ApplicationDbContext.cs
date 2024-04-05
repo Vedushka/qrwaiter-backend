@@ -1,18 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using qrwaiter_backend.Data.Models;
+using qrwaiter_backend.Extensions.UnitOfWork;
 
 namespace qrwaiter_backend.Data
 {
 
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public ApplicationDbContext() { }
-
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){
+        public async Task<ITransaction> BeginTransaction()
+        {
+            var transaction = await Database.BeginTransactionAsync();
+            return new EfTransaction(transaction);
         }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){        }
 
+        public DbSet<ApplicationUser> User { get; set; }
         public DbSet<QrCode> QrCode { get; set; }
         public DbSet<StatisticQrCode> StatisticQrCode { get; set; }
         public DbSet<NotifyDevice> NotifyDevice { get; set; }
@@ -20,6 +26,17 @@ namespace qrwaiter_backend.Data
         public DbSet<Table> Table { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ApplicationUser>()
+                                       .HasOne(u => u.Restaurant)
+                                       .WithOne(r => r.User)
+                                       .HasForeignKey<ApplicationUser>(r => r.IdRestaurant);
+
+            modelBuilder.Entity<Restaurant>()
+                                       .HasOne(r => r.User)
+                                       .WithOne(u => u.Restaurant)
+                                       .HasForeignKey<Restaurant>(r => r.IdUser);
+
             modelBuilder.Entity<QrCode>().HasKey(qr => qr.Id);
             modelBuilder.Entity<QrCode>().HasIndex(qr => qr.Link);
 
@@ -55,10 +72,13 @@ namespace qrwaiter_backend.Data
 
 
             modelBuilder.Entity<Restaurant>().HasKey(r => r.Id);
+            modelBuilder.Entity<Restaurant>().OwnsOne(r  => r.Address, nn =>
+            {
+                nn.ToJson();
+            });
 
-            
-            
-            
+
+
             base.OnModelCreating(modelBuilder);
         }
 

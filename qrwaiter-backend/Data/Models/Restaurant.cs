@@ -5,7 +5,7 @@ namespace qrwaiter_backend.Data.Models
     public class Restaurant
     {
         public Guid Id { get; set; }
-        public Guid IdIdentityUser { get; set; }
+        public Guid IdUser { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string CompanyName { get; set; } = string.Empty;
@@ -13,8 +13,8 @@ namespace qrwaiter_backend.Data.Models
         public bool NotifyMe { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
         public int TimeZoneMinutes { get; set; } = 0;
-        public IdentityUser IdentityUser { get; set; } = null!;
-        public ICollection<Table> Tabels { get; set; } = new List<Table>();
+        public virtual ApplicationUser User { get; set; } = null!;
+        public virtual ICollection<Table> Tabels { get; set; } = null!;
 
     }
     public class Address
