@@ -8,5 +8,6 @@ namespace qrwaiter_backend.Extensions.UnitOfWork
         Task BeginTransactionAsync();
         Task CommitAsync();
         IRestaurantRepository RestaurantRepository { get; }
+        ITableRepository TableRepository { get; }
     }
 }

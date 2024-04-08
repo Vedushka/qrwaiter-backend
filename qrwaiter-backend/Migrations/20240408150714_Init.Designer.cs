@@ -12,7 +12,7 @@ using qrwaiter_backend.Data;
 namespace qrwaiter_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240327204646_Init")]
+    [Migration("20240408150714_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -277,18 +277,12 @@ namespace qrwaiter_backend.Migrations
                     b.Property<Guid>("IdTable")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("NotificationLifeTimeSecunds")
-                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -330,6 +324,10 @@ namespace qrwaiter_backend.Migrations
 
                     b.Property<int>("TimeZoneMinutes")
                         .HasColumnType("int");
+
+                    b.Property<string>("WaiterLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -521,7 +519,7 @@ namespace qrwaiter_backend.Migrations
                         .IsRequired();
 
                     b.HasOne("qrwaiter_backend.Data.Models.Restaurant", "Restaurant")
-                        .WithMany("Tabels")
+                        .WithMany("Tables")
                         .HasForeignKey("IdResaurant")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -547,7 +545,7 @@ namespace qrwaiter_backend.Migrations
 
             modelBuilder.Entity("qrwaiter_backend.Data.Models.Restaurant", b =>
                 {
-                    b.Navigation("Tabels");
+                    b.Navigation("Tables");
                 });
 #pragma warning restore 612, 618
         }

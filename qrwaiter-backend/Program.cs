@@ -45,8 +45,12 @@ public class Program
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
+        builder.Services.AddScoped<ITableService, TableService>();
+        builder.Services.AddScoped<ITableRepository, TableRepository>();
+
         builder.Services.AddScoped<IRestaurantService, RestaurantService>();
         builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+        
         builder.Services.AddScoped<IIdentityService, IdentityService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         //builder.Services.AddScoped<IUnitOfWork, ApplicationDbContext>(sp =>
@@ -138,7 +142,9 @@ public class Program
             options.AddDefaultPolicy(
                 policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200").AllowAnyHeader();
+                    policy.WithOrigins("http://localhost:4200").AllowAnyHeader()
+                                    .WithMethods("PUT", "DELETE", "GET", "POST");
+
                 });
         });
         builder.Services.AddControllers();

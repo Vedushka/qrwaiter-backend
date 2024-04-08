@@ -53,7 +53,7 @@ namespace qrwaiter_backend.Controllers
         }
         // POST api/<RestaurantController>
         [HttpPost]
-        public async Task<RestaurantDTO> Post([FromBody] RestaurantDTO restaurantDto)
+        public async Task<RestaurantDTO> Update([FromBody] RestaurantDTO restaurantDto)
         {
             var restaurant = await _unitOfWork.RestaurantRepository.GetById(restaurantDto.Id);
             _mapper.Map<RestaurantDTO, Restaurant>(restaurantDto, restaurant);

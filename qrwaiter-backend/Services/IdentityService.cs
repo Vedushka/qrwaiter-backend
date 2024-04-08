@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using qrwaiter_backend.Data.Models;
+using qrwaiter_backend.Extensions.UnitOfWork;
 using qrwaiter_backend.Repositories.Interfaces;
 using qrwaiter_backend.Services.Interfaces;
 using System;
@@ -20,16 +21,20 @@ namespace qrwaiter_backend.Services
         private readonly IRestaurantService _restaurantService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUnitOfWork _unitOfWork;
+
 
         public IdentityService(IConfiguration configuration,
                                IRestaurantService restaurantService,
                                IServiceProvider serviceProvider,
-                               IHttpContextAccessor httpContextAccessor)
+                               IHttpContextAccessor httpContextAccessor,
+                               IUnitOfWork unitOfWork)
         {
             _configuration = configuration;
             _restaurantService = restaurantService;
             _serviceProvider = serviceProvider;
             _httpContextAccessor = httpContextAccessor;
+            _unitOfWork = unitOfWork;
         }
         public async Task<string> Refresh()
         {
@@ -111,6 +116,7 @@ namespace qrwaiter_backend.Services
 
         public async Task Register(RegisterRequest registration)
         {
+            await _unitOfWork.BeginTransactionAsync();
             var userManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             if (!userManager.SupportsUserEmail)
@@ -137,8 +143,9 @@ namespace qrwaiter_backend.Services
                 throw new BadHttpRequestException(result.Errors.First().Description);
             }
 
-            var restaurant = await _restaurantService.CreateByRestaurantIdAndUserId(user.IdRestaurant, user.Id);
-
+            await _restaurantService.CreateByRestaurantIdAndUserId(user.IdRestaurant, user.Id);
+            _unitOfWork.SaveChanges();
+            await _unitOfWork.CommitAsync();
             //await SendConfirmationEmailAsync(user, userManager, context, email);
         }
     }

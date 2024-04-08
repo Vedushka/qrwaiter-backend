@@ -63,7 +63,7 @@ namespace qrwaiter_backend.Data
 
             modelBuilder.Entity<Table>().HasKey(t => t.Id);
             modelBuilder.Entity<Table>().HasOne(t => t.Restaurant)
-                                        .WithMany(r => r.Tabels)
+                                        .WithMany(r => r.Tables)
                                         .HasForeignKey(t => t.IdResaurant);
             modelBuilder.Entity<Table>().HasOne(t => t.QrCode)
                                         .WithOne(r => r.Table)

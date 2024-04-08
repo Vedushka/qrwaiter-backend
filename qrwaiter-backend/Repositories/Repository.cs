@@ -13,7 +13,7 @@ namespace qrwaiter_backend.Repositories
         {
             _context = context;
         }
-        public IQueryable<T> GetAll()
+        public async Task<IQueryable<T>> GetAll()
         {
             return _context.Set<T>();
         }
@@ -26,7 +26,6 @@ namespace qrwaiter_backend.Repositories
         public async Task<T> Insert(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
-            await _context.SaveChangesAsync();
             return entity;
         }
 
@@ -49,10 +48,7 @@ namespace qrwaiter_backend.Repositories
             return entity;
         }
 
-        Task<IQueryable<T>> IRepository<T>.GetAll()
-        {
-            throw new NotImplementedException();
-        }
+
 
     }
 }

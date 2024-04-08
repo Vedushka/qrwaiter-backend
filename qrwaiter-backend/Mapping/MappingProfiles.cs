@@ -9,6 +9,12 @@ namespace qrwaiter_backend.Mapping
         public MappingProfiles() { 
             CreateMap<Restaurant, RestaurantDTO>();
             CreateMap<RestaurantDTO, Restaurant>();
+
+            CreateMap<Table, TableDTO>();
+            CreateMap<TableDTO, Table>();
+
+            CreateMap<QrCode, QrCodeDTO>();
+            CreateMap<QrCodeDTO, QrCode>();
         }
     }
 }
