@@ -72,7 +72,8 @@ namespace qrwaiter_backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IdTable = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Link = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClientLink = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    WaiterLink = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -193,7 +194,7 @@ namespace qrwaiter_backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IdUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WaiterLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WaiterLink = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -334,15 +335,25 @@ namespace qrwaiter_backend.Migrations
                 column: "QrCodesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QrCode_Link",
+                name: "IX_QrCode_ClientLink",
                 table: "QrCode",
-                column: "Link");
+                column: "ClientLink");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QrCode_WaiterLink",
+                table: "QrCode",
+                column: "WaiterLink");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restaurant_IdUser",
                 table: "Restaurant",
                 column: "IdUser",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Restaurant_WaiterLink",
+                table: "Restaurant",
+                column: "WaiterLink");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StatisticQrCode_IdQrCode",

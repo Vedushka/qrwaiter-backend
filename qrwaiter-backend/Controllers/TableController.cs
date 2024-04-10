@@ -45,6 +45,7 @@ namespace qrwaiter_backend.Controllers
             var qrCode = new QrCode();
             qrCode.Id = table.IdQrCode;
             qrCode.IdTable = table.Id;
+            qrCode.Title = "Позвать официанта";
 
             table.QrCode = qrCode;
             table = await _unitOfWork.TableRepository.Insert(table);

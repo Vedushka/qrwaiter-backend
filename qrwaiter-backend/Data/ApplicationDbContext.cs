@@ -36,9 +36,11 @@ namespace qrwaiter_backend.Data
                                        .HasOne(r => r.User)
                                        .WithOne(u => u.Restaurant)
                                        .HasForeignKey<Restaurant>(r => r.IdUser);
+            modelBuilder.Entity<Restaurant>().HasIndex(r => r.WaiterLink);
 
             modelBuilder.Entity<QrCode>().HasKey(qr => qr.Id);
-            modelBuilder.Entity<QrCode>().HasIndex(qr => qr.Link);
+            modelBuilder.Entity<QrCode>().HasIndex(qr => qr.ClientLink);
+            modelBuilder.Entity<QrCode>().HasIndex(qr => qr.WaiterLink);
 
 
 

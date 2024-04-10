@@ -105,7 +105,7 @@ namespace qrwaiter_backend.Services
                                 issuer: issuer,
                                 audience: audience,
                                 claims: claims,
-                                expires: DateTime.Now.AddSeconds(expiration),
+                                expires: DateTime.UtcNow.AddSeconds(expiration),
                                 
                                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), SecurityAlgorithms.HmacSha256)
                             );

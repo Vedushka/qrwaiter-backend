@@ -96,7 +96,7 @@ public class Program
                 ValidateAudience = true,
                 ValidateIssuerSigningKey = true,
                 ValidateLifetime = true,
-                RequireExpirationTime = true
+                RequireExpirationTime = true,
 
             };
         });

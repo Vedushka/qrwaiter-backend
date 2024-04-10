@@ -271,23 +271,29 @@ namespace qrwaiter_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ClientLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<Guid>("IdTable")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Link")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("WaiterLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Link");
+                    b.HasIndex("ClientLink");
+
+                    b.HasIndex("WaiterLink");
 
                     b.ToTable("QrCode");
                 });
@@ -324,12 +330,14 @@ namespace qrwaiter_backend.Migrations
 
                     b.Property<string>("WaiterLink")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdUser")
                         .IsUnique();
+
+                    b.HasIndex("WaiterLink");
 
                     b.ToTable("Restaurant");
                 });

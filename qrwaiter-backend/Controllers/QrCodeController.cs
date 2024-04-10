@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using qrwaiter_backend.Data.Models;
+using qrwaiter_backend.Extensions;
 using qrwaiter_backend.Extensions.UnitOfWork;
 using qrwaiter_backend.Mapping.DTOs;
 using qrwaiter_backend.Services;
@@ -17,57 +18,40 @@ namespace qrwaiter_backend.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class RestaurantController : ControllerBase
+    public class QrCodeController : ControllerBase
     {
-        private readonly IRestaurantService _restaurantService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         //private readonly SignInManager<ApplicationUser> _signInManager;
         //private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public RestaurantController(IRestaurantService restaurantService,
+        public QrCodeController(
                                     //SignInManager<ApplicationUser> signInManager, 
-                                    //UserManager<ApplicationUser> userManager
                                     IHttpContextAccessor httpContextAccessor,
                                     IUnitOfWork unitOfWork,
                                     IMapper mapper
             )
         {
-            _restaurantService = restaurantService;
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             //_signInManager = signInManager;
             //_userManager = userManager;
         }
-        [HttpGet]
-        public async Task<RestaurantDTO> Get()
-        {
-            var restaurantId = new Guid(_httpContextAccessor.HttpContext?.User.FindFirstValue("restaurantId") ?? throw new ArgumentNullException());
-            return _mapper.Map<Restaurant, RestaurantDTO>(await _unitOfWork.RestaurantRepository.GetById(restaurantId));
-        }
-
         [HttpGet("{id}")]
-        public async Task<RestaurantDTO> Get([FromRoute] Guid id)
+        public async Task<QrCodeDTO> Get([FromRoute] Guid id)
         {
-            return _mapper.Map<Restaurant, RestaurantDTO>(await _unitOfWork.RestaurantRepository.GetById(id));
-        }
-        [HttpGet("generateLink/{id}")]
-        public async Task<RestaurantDTO> GenerateLink([FromRoute] Guid id)
-        {
-            var restaurant = await _unitOfWork.RestaurantRepository.GenerateNewLink(id);
-            _unitOfWork.SaveChanges();
-            return _mapper.Map<Restaurant, RestaurantDTO>(restaurant);
+            return _mapper.Map<QrCode, QrCodeDTO>(await _unitOfWork.QrCodeRepository.GetById(id));
         }
         // POST api/<RestaurantController>
         [HttpPost]
-        public async Task<RestaurantDTO> Update([FromBody] RestaurantDTO restaurantDto)
+        public async Task<QrCodeDTO> Update([FromBody] QrCodeDTO qrCoodeDto)
         {
-            var restaurant = await _unitOfWork.RestaurantRepository.GetById(restaurantDto.Id);
-            _mapper.Map<RestaurantDTO, Restaurant>(restaurantDto, restaurant);
-            restaurant = await _unitOfWork.RestaurantRepository.Update(restaurant);
+            var qrCode = await _unitOfWork.QrCodeRepository.GetById(qrCoodeDto.Id);
+            _mapper.Map<QrCodeDTO, QrCode>(qrCoodeDto, qrCode);
+            qrCode = await _unitOfWork.QrCodeRepository.Update(qrCode);
             _unitOfWork.SaveChanges();
-            return _mapper.Map<Restaurant, RestaurantDTO>(restaurant);
+            return _mapper.Map<QrCode, QrCodeDTO>(qrCode);
         }
 
         // PUT api/<RestaurantController>/5
@@ -80,6 +64,13 @@ namespace qrwaiter_backend.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+        [HttpGet("generateLink/{id}/{type}")]
+        public async Task<QrCodeDTO> GenerateLink([FromRoute] Guid id, LinkType type)
+        {
+            var qrCode = await _unitOfWork.QrCodeRepository.GenerateNewLink(id, type);
+            _unitOfWork.SaveChanges();
+            return _mapper.Map<QrCode, QrCodeDTO>(qrCode);
         }
     }
 }

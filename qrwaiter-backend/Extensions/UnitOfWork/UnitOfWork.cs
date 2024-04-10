@@ -11,6 +11,7 @@ namespace qrwaiter_backend.Extensions.UnitOfWork
         private readonly ApplicationDbContext _context;
         private IRestaurantRepository _restaurantRepository;
         private ITableRepository _tableRepository;
+        private IQrCodeRepository _qrCodeRepository;
         private ITransaction? _currentTransaction;
             public UnitOfWork(ApplicationDbContext context)
             {
@@ -44,6 +45,7 @@ namespace qrwaiter_backend.Extensions.UnitOfWork
 
         public IRestaurantRepository RestaurantRepository => _restaurantRepository ??= new RestaurantRepository(_context);
         public ITableRepository TableRepository => _tableRepository ??= new TableRepository(_context);
+        public IQrCodeRepository QrCodeRepository => _qrCodeRepository ??= new QrCodeRepository(_context);
         public void SaveChanges()
             {
                 _context.SaveChanges();

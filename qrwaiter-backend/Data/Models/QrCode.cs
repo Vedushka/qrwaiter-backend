@@ -6,7 +6,8 @@ namespace qrwaiter_backend.Data.Models
     {
         public Guid Id { get; set; }
         public Guid IdTable { get; set; }
-        public string Link { get; set; } = ShortId.Generate();
+        public string ClientLink { get; set; } = ShortId.Generate();
+        public string WaiterLink { get; set; } = ShortId.Generate();
         public string Title {  get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
         public ICollection<NotifyDevice> NotifyDevices { get; set; } = new List<NotifyDevice>();

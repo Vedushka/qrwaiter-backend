@@ -9,5 +9,6 @@ namespace qrwaiter_backend.Extensions.UnitOfWork
         Task CommitAsync();
         IRestaurantRepository RestaurantRepository { get; }
         ITableRepository TableRepository { get; }
+        IQrCodeRepository QrCodeRepository { get; }
     }
 }
