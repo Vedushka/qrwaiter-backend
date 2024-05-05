@@ -64,6 +64,13 @@ namespace qrwaiter_backend.Controllers
                 tables.Where(t => t.IdResaurant == id && t.IsDeleted == false).OrderBy(t => t.Number).ToList()
                 ));
         }
+        [AllowAnonymous]
+        [HttpGet("waiter/{link}")]
+        public async Task<ActionResult<List<TableWithWaitersDTO>>> GetTablesWithWaiterByRestaurantLink([FromRoute] string link)
+        {
+           return await _tableService.GetTablesWithWaiterByRestaurantLink(link);
+
+        }
 
         [HttpPost]
         public async Task<ActionResult<TableDTO>> Update([FromBody] TableDTO tableDTO)

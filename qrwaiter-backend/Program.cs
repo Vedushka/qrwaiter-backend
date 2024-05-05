@@ -21,6 +21,7 @@ using System.Text;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using qrwaiter_backend.Middlewares;
 
 
 public class Program
@@ -42,8 +43,7 @@ public class Program
 
 
 
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
         builder.Services.AddScoped<ITableService, TableService>();
         builder.Services.AddScoped<ITableRepository, TableRepository>();
@@ -53,9 +53,14 @@ public class Program
         
         builder.Services.AddScoped<IIdentityService, IdentityService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-        //builder.Services.AddScoped<IUnitOfWork, ApplicationDbContext>(sp =>
-        //    sp.GetRequiredService<ApplicationDbContext>());
 
+        builder.Services.AddScoped<INotificationService, NotificationService>();
+        builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+        
+        builder.Services.AddScoped<IQrCodeService, QrCodeService>();
+        builder.Services.AddScoped<IQrCodeRepository, QrCodeRepository>();
+
+        
         builder.Services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -135,16 +140,17 @@ public class Program
             new string[]{}
         }
             });
-        }); builder.Services.AddApplicationInsightsTelemetry();
+        }); 
+        builder.Services.AddApplicationInsightsTelemetry();
 
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(
                 policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200").AllowAnyHeader()
+                    policy.WithOrigins("https://localhost:4200").AllowAnyHeader()
                                     .WithMethods("PUT", "DELETE", "GET", "POST");
-
+                    
                 });
         });
         builder.Services.AddControllers();
@@ -158,7 +164,7 @@ public class Program
         }
         app.MapGroup("/api/account").MapIdentityApi<qrwaiter_backend.Data.Models.ApplicationUser>();
 
-
+        app.UseMiddleware<ResponseErrorHandlerMiddleware>().UseResponseCaching();
 
 
         app.UseHttpsRedirection();

@@ -52,18 +52,16 @@ namespace qrwaiter_backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NotifyDevice",
+                name: "Device",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DeviceToken = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NotifyDevice", x => x.Id);
+                    table.PrimaryKey("PK_Device", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,7 +213,7 @@ namespace qrwaiter_backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NotifyDeviceQrCode",
+                name: "DeviceQrCode",
                 columns: table => new
                 {
                     NotifyDevicesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -223,15 +221,15 @@ namespace qrwaiter_backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NotifyDeviceQrCode", x => new { x.NotifyDevicesId, x.QrCodesId });
+                    table.PrimaryKey("PK_DeviceQrCode", x => new { x.NotifyDevicesId, x.QrCodesId });
                     table.ForeignKey(
-                        name: "FK_NotifyDeviceQrCode_NotifyDevice_NotifyDevicesId",
+                        name: "FK_DeviceQrCode_Device_NotifyDevicesId",
                         column: x => x.NotifyDevicesId,
-                        principalTable: "NotifyDevice",
+                        principalTable: "Device",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_NotifyDeviceQrCode_QrCode_QrCodesId",
+                        name: "FK_DeviceQrCode_QrCode_QrCodesId",
                         column: x => x.QrCodesId,
                         principalTable: "QrCode",
                         principalColumn: "Id",
@@ -325,13 +323,13 @@ namespace qrwaiter_backend.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotifyDevice_DeviceToken",
-                table: "NotifyDevice",
+                name: "IX_Device_DeviceToken",
+                table: "Device",
                 column: "DeviceToken");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotifyDeviceQrCode_QrCodesId",
-                table: "NotifyDeviceQrCode",
+                name: "IX_DeviceQrCode_QrCodesId",
+                table: "DeviceQrCode",
                 column: "QrCodesId");
 
             migrationBuilder.CreateIndex(
@@ -342,7 +340,7 @@ namespace qrwaiter_backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_QrCode_WaiterLink",
                 table: "QrCode",
-                column: "WaiterLink");
+                column: "Link");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restaurant_IdUser",
@@ -353,7 +351,7 @@ namespace qrwaiter_backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Restaurant_WaiterLink",
                 table: "Restaurant",
-                column: "WaiterLink");
+                column: "Link");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StatisticQrCode_IdQrCode",
@@ -391,7 +389,7 @@ namespace qrwaiter_backend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "NotifyDeviceQrCode");
+                name: "DeviceQrCode");
 
             migrationBuilder.DropTable(
                 name: "StatisticQrCode");
@@ -403,7 +401,7 @@ namespace qrwaiter_backend.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "NotifyDevice");
+                name: "Device");
 
             migrationBuilder.DropTable(
                 name: "QrCode");

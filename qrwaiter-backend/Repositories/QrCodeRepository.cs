@@ -20,6 +20,16 @@ namespace qrwaiter_backend.Repositories
             this._context = context;
         }
 
+        public async Task<QrCode> GetByLink(string link, LinkType type)
+        {
+            return type switch
+            {
+                LinkType.ClientLink => await _context.QrCode.Where(qr => qr.ClientLink == link).Include(qr => qr.Table).Include(qr => qr.NotifyDevices).Include(qr => qr.Table).FirstAsync(),
+                LinkType.WaiterLink => await _context.QrCode.Where(qr => qr.WaiterLink == link).Include(qr => qr.Table).Include(qr => qr.NotifyDevices).Include(qr => qr.Table).FirstAsync(),
+                _ => throw new NoNullAllowedException()
+            };
+        }
+
         public async Task<QrCode> GenerateNewLink(Guid id, LinkType type)
         {
             QrCode? qrCode = await _context.QrCode.FindAsync(id);

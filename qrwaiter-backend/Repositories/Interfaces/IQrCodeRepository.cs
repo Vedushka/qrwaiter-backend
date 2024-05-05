@@ -7,5 +7,6 @@ namespace qrwaiter_backend.Repositories.Interfaces
     {
         void SoftDelete(Guid id);
         Task<QrCode> GenerateNewLink(Guid id, LinkType type);
+        Task<QrCode> GetByLink(string link, LinkType type);
     }
 }

@@ -11,7 +11,6 @@ using qrwaiter_backend.Services.Interfaces;
 using System.Linq;
 using System.Security.Claims;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace qrwaiter_backend.Controllers
 {
@@ -22,28 +21,28 @@ namespace qrwaiter_backend.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        //private readonly SignInManager<ApplicationUser> _signInManager;
-        //private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IQrCodeService _qrCodeService;
         public QrCodeController(
-                                    //SignInManager<ApplicationUser> signInManager, 
-                                    IHttpContextAccessor httpContextAccessor,
                                     IUnitOfWork unitOfWork,
-                                    IMapper mapper
+                                    IMapper mapper,
+                                    IQrCodeService qrCodeService
             )
         {
-            _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            //_signInManager = signInManager;
-            //_userManager = userManager;
+            _qrCodeService = qrCodeService;
         }
         [HttpGet("{id}")]
         public async Task<QrCodeDTO> Get([FromRoute] Guid id)
         {
             return _mapper.Map<QrCode, QrCodeDTO>(await _unitOfWork.QrCodeRepository.GetById(id));
         }
-        // POST api/<RestaurantController>
+        [AllowAnonymous]
+        [HttpGet("QrCodeAndTableDto/{link}/{linkType}")]
+        public async Task<QrCodeAndTableDTO> GetQrCodeAndTableDTOByLink([FromRoute] string link, LinkType linkType = LinkType.WaiterLink, [FromQuery] string? deviceToken = "")
+        {
+            return await _qrCodeService.GetQrCodeAndTableDTOByLink(link, linkType, deviceToken);
+        }
         [HttpPost]
         public async Task<QrCodeDTO> Update([FromBody] QrCodeDTO qrCoodeDto)
         {
@@ -54,13 +53,11 @@ namespace qrwaiter_backend.Controllers
             return _mapper.Map<QrCode, QrCodeDTO>(qrCode);
         }
 
-        // PUT api/<RestaurantController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<RestaurantController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

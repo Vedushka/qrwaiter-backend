@@ -44,8 +44,8 @@ namespace qrwaiter_backend.Services
             var key = jwsSettings.GetValue<string>("Key");
             var issuer = jwsSettings.GetValue<string>("Issuer");
             var audience = jwsSettings.GetValue<string>("Audience");
-            var expiration = jwsSettings.GetValue<int>("Eexpiration");
-            var expirationRefreshDays = jwsSettings.GetValue<int>("EexpirationRefresDays");
+            var expiration = jwsSettings.GetValue<int>("Expiration");
+            var expirationRefreshDays = jwsSettings.GetValue<int>("ExpirationRefresDays");
             
             var expString = (_httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.Exp) ?? throw new ArgumentNullException());
             var userId = Guid.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue("userId") ?? throw new ArgumentNullException());
@@ -83,7 +83,7 @@ namespace qrwaiter_backend.Services
             var key = jwsSettings.GetValue<string>("Key");
             var issuer = jwsSettings.GetValue<string>("Issuer");
             var audience = jwsSettings.GetValue<string>("Audience");
-            var expiration = jwsSettings.GetValue<int>("Eexpiration");
+            var expiration = jwsSettings.GetValue<int>("Expiration");
 
             var user = _serviceProvider.GetService<SignInManager<ApplicationUser>>().UserManager.Users.FirstOrDefault(u => u.NormalizedEmail == login.Email.ToUpper());
 
@@ -105,7 +105,7 @@ namespace qrwaiter_backend.Services
                                 issuer: issuer,
                                 audience: audience,
                                 claims: claims,
-                                expires: DateTime.UtcNow.AddSeconds(expiration),
+                                expires: DateTime.Now.AddSeconds(expiration),
                                 
                                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), SecurityAlgorithms.HmacSha256)
                             );

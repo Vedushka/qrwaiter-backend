@@ -10,7 +10,7 @@ namespace qrwaiter_backend.Data.Models
         public string WaiterLink { get; set; } = ShortId.Generate();
         public string Title {  get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
-        public ICollection<NotifyDevice> NotifyDevices { get; set; } = new List<NotifyDevice>();
+        public ICollection<Device> NotifyDevices { get; set; } = new List<Device>();
         public ICollection<StatisticQrCode> StatisticQrCodes { get; set; } = new List<StatisticQrCode>();
         public Table Table { get; set; } = null!; 
 

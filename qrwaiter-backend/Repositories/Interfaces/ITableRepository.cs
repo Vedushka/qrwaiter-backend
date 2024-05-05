@@ -4,6 +4,7 @@ namespace qrwaiter_backend.Repositories.Interfaces
 {
     public interface ITableRepository : IRepository<Table>
     {
-        public Task<List<Table>> GetTablesByRestaurantId(Guid id);
+        public Task<List<Table>> GetTablesWithQrCodesWithDevicesByRestaurantLink(string restaurantLink);
+
     }
 }

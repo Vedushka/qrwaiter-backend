@@ -10,5 +10,6 @@ namespace qrwaiter_backend.Extensions.UnitOfWork
         IRestaurantRepository RestaurantRepository { get; }
         ITableRepository TableRepository { get; }
         IQrCodeRepository QrCodeRepository { get; }
+        IDeviceRepository DeviceRepository { get; }
     }
 }

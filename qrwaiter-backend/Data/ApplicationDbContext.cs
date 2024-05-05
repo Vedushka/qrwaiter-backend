@@ -21,7 +21,7 @@ namespace qrwaiter_backend.Data
         public DbSet<ApplicationUser> User { get; set; }
         public DbSet<QrCode> QrCode { get; set; }
         public DbSet<StatisticQrCode> StatisticQrCode { get; set; }
-        public DbSet<NotifyDevice> NotifyDevice { get; set; }
+        public DbSet<Device> Device { get; set; }
         public DbSet<Restaurant> Restaurant { get; set; }
         public DbSet<Table> Table { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -58,9 +58,9 @@ namespace qrwaiter_backend.Data
                                                   .HasForeignKey(sqr => sqr.IdQrCode);
 
 
-            modelBuilder.Entity<NotifyDevice>().HasKey(nd => nd.Id);
-            modelBuilder.Entity<NotifyDevice>().HasIndex(nd => nd.DeviceToken);
-            modelBuilder.Entity<NotifyDevice>().HasMany(nd => nd.QrCodes).WithMany(qr => qr.NotifyDevices);
+            modelBuilder.Entity<Device>().HasKey(nd => nd.Id);
+            modelBuilder.Entity<Device>().HasIndex(nd => nd.DeviceToken);
+            modelBuilder.Entity<Device>().HasMany(nd => nd.QrCodes).WithMany(qr => qr.NotifyDevices);
 
 
             modelBuilder.Entity<Table>().HasKey(t => t.Id);

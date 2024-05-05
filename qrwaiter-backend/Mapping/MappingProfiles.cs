@@ -15,6 +15,9 @@ namespace qrwaiter_backend.Mapping
 
             CreateMap<QrCode, QrCodeDTO>();
             CreateMap<QrCodeDTO, QrCode>();
+            
+            CreateMap<WaiterDTO, Device>();
+            CreateMap<Device, WaiterDTO>();
         }
     }
 }

@@ -22,6 +22,21 @@ namespace qrwaiter_backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DeviceQrCode", b =>
+                {
+                    b.Property<Guid>("NotifyDevicesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QrCodesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("NotifyDevicesId", "QrCodesId");
+
+                    b.HasIndex("QrCodesId");
+
+                    b.ToTable("DeviceQrCode");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
@@ -153,21 +168,6 @@ namespace qrwaiter_backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("NotifyDeviceQrCode", b =>
-                {
-                    b.Property<Guid>("NotifyDevicesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QrCodesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("NotifyDevicesId", "QrCodesId");
-
-                    b.HasIndex("QrCodesId");
-
-                    b.ToTable("NotifyDeviceQrCode");
-                });
-
             modelBuilder.Entity("qrwaiter_backend.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -237,22 +237,15 @@ namespace qrwaiter_backend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("qrwaiter_backend.Data.Models.NotifyDevice", b =>
+            modelBuilder.Entity("qrwaiter_backend.Data.Models.Device", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("DeviceToken")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -262,7 +255,7 @@ namespace qrwaiter_backend.Migrations
 
                     b.HasIndex("DeviceToken");
 
-                    b.ToTable("NotifyDevice");
+                    b.ToTable("Device");
                 });
 
             modelBuilder.Entity("qrwaiter_backend.Data.Models.QrCode", b =>
@@ -285,7 +278,7 @@ namespace qrwaiter_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WaiterLink")
+                    b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -293,7 +286,7 @@ namespace qrwaiter_backend.Migrations
 
                     b.HasIndex("ClientLink");
 
-                    b.HasIndex("WaiterLink");
+                    b.HasIndex("Link");
 
                     b.ToTable("QrCode");
                 });
@@ -328,7 +321,7 @@ namespace qrwaiter_backend.Migrations
                     b.Property<int>("TimeZoneMinutes")
                         .HasColumnType("int");
 
-                    b.Property<string>("WaiterLink")
+                    b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -337,7 +330,7 @@ namespace qrwaiter_backend.Migrations
                     b.HasIndex("IdUser")
                         .IsUnique();
 
-                    b.HasIndex("WaiterLink");
+                    b.HasIndex("Link");
 
                     b.ToTable("Restaurant");
                 });
@@ -393,6 +386,21 @@ namespace qrwaiter_backend.Migrations
                     b.ToTable("Table");
                 });
 
+            modelBuilder.Entity("DeviceQrCode", b =>
+                {
+                    b.HasOne("qrwaiter_backend.Data.Models.Device", null)
+                        .WithMany()
+                        .HasForeignKey("NotifyDevicesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("qrwaiter_backend.Data.Models.QrCode", null)
+                        .WithMany()
+                        .HasForeignKey("QrCodesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -440,21 +448,6 @@ namespace qrwaiter_backend.Migrations
                     b.HasOne("qrwaiter_backend.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("NotifyDeviceQrCode", b =>
-                {
-                    b.HasOne("qrwaiter_backend.Data.Models.NotifyDevice", null)
-                        .WithMany()
-                        .HasForeignKey("NotifyDevicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("qrwaiter_backend.Data.Models.QrCode", null)
-                        .WithMany()
-                        .HasForeignKey("QrCodesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
