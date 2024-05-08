@@ -6,6 +6,7 @@ namespace qrwaiter_backend.Repositories.Interfaces
     {
         void SoftDelete(Guid id);
         Task<Restaurant> GenerateNewLink(Guid id);
+        Task<Restaurant?> GetWithTablesAndQrCodes(Guid id);
 
     }
 }

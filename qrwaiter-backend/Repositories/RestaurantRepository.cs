@@ -44,8 +44,17 @@ namespace qrwaiter_backend.Repositories
             return restaurant;
         }
 
-
-
+        public async Task<Restaurant?> GetWithTablesAndQrCodes(Guid id)
+        {
+            return await _context.Restaurant
+                                            
+                                            .Include(r => r.Tables.Where(t => t.IsDeleted == false))
+                                            .ThenInclude(t => t.QrCode)
+                                            .FirstOrDefaultAsync(r => r.Id == id);
+                
+                
+                ;
+        }
     }
 }
 

@@ -29,6 +29,7 @@ namespace qrwaiter_backend.Repositories
                 _ => throw new NoNullAllowedException()
             };
         }
+        
 
         public async Task<QrCode> GenerateNewLink(Guid id, LinkType type)
         {

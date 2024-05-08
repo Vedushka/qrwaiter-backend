@@ -60,6 +60,8 @@ public class Program
         builder.Services.AddScoped<IQrCodeService, QrCodeService>();
         builder.Services.AddScoped<IQrCodeRepository, QrCodeRepository>();
 
+        builder.Services.AddScoped<IStatisticQrCodeRepository, StatisticQrCodeRepository>();
+
         
         builder.Services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())

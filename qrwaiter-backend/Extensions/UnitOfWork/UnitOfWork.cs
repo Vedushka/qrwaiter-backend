@@ -13,6 +13,7 @@ namespace qrwaiter_backend.Extensions.UnitOfWork
         private ITableRepository _tableRepository;
         private IQrCodeRepository _qrCodeRepository;
         private IDeviceRepository _deviceRepository;
+        private IStatisticQrCodeRepository _statisticQrCodeRepository;
         private ITransaction? _currentTransaction;
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -48,6 +49,7 @@ namespace qrwaiter_backend.Extensions.UnitOfWork
         public ITableRepository TableRepository => _tableRepository ??= new TableRepository(_context);
         public IQrCodeRepository QrCodeRepository => _qrCodeRepository ??= new QrCodeRepository(_context);
         public IDeviceRepository DeviceRepository => _deviceRepository ??= new DeviceRepository(_context);
+        public IStatisticQrCodeRepository StatisticQrCodeRepository => _statisticQrCodeRepository ??= new StatisticQrCodeRepository(_context);
         public void SaveChanges()
         {
             _context.SaveChanges();

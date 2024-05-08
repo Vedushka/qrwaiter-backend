@@ -28,6 +28,7 @@ namespace qrwaiter_backend.Controllers
         {
             _unitOfWork = unitOfWork;
             _notificationService = notificationService;
+
         }
         [AllowAnonymous]
         [HttpPost("addDeviceToQrCode")]
@@ -60,6 +61,23 @@ namespace qrwaiter_backend.Controllers
         {
             return Ok(await _notificationService.CallWaiter(clientLink));
         }
-        
+        [AllowAnonymous]
+        [HttpGet("waiter/{token}")]
+        public async Task<WaiterDTO> GetWaiterDTO([FromRoute] string token)
+        {
+            var device = await _unitOfWork.DeviceRepository.GetByDeviceToken(token);
+            if (device == null) throw new ArgumentNullException(nameof(device));
+            return new WaiterDTO { DeviceToken = device.DeviceToken, Name = device.Name };
+        }
+        [AllowAnonymous]
+        [HttpPut("waiter")]
+        public async Task<WaiterDTO> PutDevice([FromBody] WaiterDTO waiterDto)
+        {
+            var device = new Device { Name = waiterDto.Name, DeviceToken = waiterDto.DeviceToken };
+            await _unitOfWork.DeviceRepository.Insert(device);
+            _unitOfWork.SaveChanges();
+            return waiterDto;
+        }
+
     }
 }

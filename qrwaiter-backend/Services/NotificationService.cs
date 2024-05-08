@@ -75,6 +75,10 @@ namespace qrwaiter_backend.Services
 
             QrCode? qrCode = await _unitOfWork.QrCodeRepository.GetByLink(clientLink, LinkType.ClientLink);
             if (qrCode is null) throw new NullReferenceException(nameof(qrCode));
+
+            await _unitOfWork.StatisticQrCodeRepository.Insert(new StatisticQrCode{ IdQrCode = qrCode.Id});
+            _unitOfWork.SaveChanges();               
+            
             string title = $"{qrCode.Table.Name} {qrCode.Table.Number}";
             string body = "Вызов официанта";
             List<string> tokens = qrCode.NotifyDevices.Select(d => d.DeviceToken).ToList(); 

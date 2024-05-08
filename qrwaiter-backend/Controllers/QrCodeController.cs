@@ -22,20 +22,32 @@ namespace qrwaiter_backend.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IQrCodeService _qrCodeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         public QrCodeController(
                                     IUnitOfWork unitOfWork,
                                     IMapper mapper,
-                                    IQrCodeService qrCodeService
+                                    IQrCodeService qrCodeService,
+                                    IHttpContextAccessor httpContextAccessor
+
             )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _qrCodeService = qrCodeService;
+            _httpContextAccessor = httpContextAccessor;
+
         }
         [HttpGet("{id}")]
         public async Task<QrCodeDTO> Get([FromRoute] Guid id)
         {
             return _mapper.Map<QrCode, QrCodeDTO>(await _unitOfWork.QrCodeRepository.GetById(id));
+        }
+        [HttpGet("printQrCodes/{type}")]
+        public async Task<List<QrCodePrintDTO>> GetQrCodesPrint([FromRoute] LinkType type)
+        {
+            var restaurantId = new Guid(_httpContextAccessor.HttpContext?.User.FindFirstValue("restaurantId") ?? throw new ArgumentNullException());
+            return await _qrCodeService.GetQrCodesForPrint(restaurantId, type);
         }
         [AllowAnonymous]
         [HttpGet("QrCodeAndTableDto/{link}/{linkType}")]
