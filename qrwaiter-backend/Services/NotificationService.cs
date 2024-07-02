@@ -80,7 +80,7 @@ namespace qrwaiter_backend.Services
             _unitOfWork.SaveChanges();               
             
             string title = $"{qrCode.Table.Name} {qrCode.Table.Number}";
-            string body = "Вызов официанта";
+            string body = "Call waiter";
             List<string> tokens = qrCode.NotifyDevices.Select(d => d.DeviceToken).ToList(); 
             var responses = await this.SendWebPushMulticast(tokens, title, body);
             return "ok";
